@@ -1,4 +1,6 @@
 streamlit
 pymupdf
+spacy
+pandas
 Pillow
 reportlab
