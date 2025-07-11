@@ -11,7 +11,7 @@ st.title("📄 PDF Extractor – Metadata, Text, Links, TOC, Headers, Images")
 
 uploaded_file = st.file_uploader("📤 Upload a PDF file", type=["pdf"])
 
-MAX_HEADER_FOOTER_Y = 80  # Threshold in pixels from top/bottom to detect headers/footers
+MAX_HEADER_FOOTER_Y = 95  # Threshold in pixels from top/bottom to detect headers/footers
 
 if uploaded_file is not None:
     doc = fitz.open(stream=uploaded_file.read(), filetype="pdf")
