@@ -1,19 +1,17 @@
 import streamlit as st
 import fitz  # PyMuPDF
-from PIL import Image
 import io
-import pandas as pd
-from collections import Counter
-import pdfplumber
-import tempfile
+import os
+import zipfile
 import re
+from PIL import Image
 
 st.set_page_config(page_title="PDF Extractor by PyMuPDF", layout="wide")
-st.title("📄 PDF Extractor – Metadata, Text, Links, TOC, Tables & Images")
+st.title("📄 PDF Extractor – Metadata, Text, Links, TOC, Headers, Images")
 
 uploaded_file = st.file_uploader("📤 Upload a PDF file", type=["pdf"])
 
-MAX_HEADER_FOOTER_Y = 95  # Threshold in pixels from top/bottom to detect headers/footers
+MAX_HEADER_FOOTER_Y = 80  # Threshold in pixels from top/bottom to detect headers/footers
 
 if uploaded_file is not None:
     doc = fitz.open(stream=uploaded_file.read(), filetype="pdf")
@@ -21,6 +19,10 @@ if uploaded_file is not None:
 
     unique_images = {}
     toc_candidates = []
+
+    # Create directory to store images
+    image_save_dir = "extracted_images"
+    os.makedirs(image_save_dir, exist_ok=True)
 
     for i in range(doc.page_count):
         page = doc.load_page(i)
@@ -47,17 +49,21 @@ if uploaded_file is not None:
                 if y1 > page_height - MAX_HEADER_FOOTER_Y:
                     page_footers.append(block_text)
 
-        # ─── Collect unique embedded images ───
-        for img in embedded_images:
+        # ─── Extract and Save Images ───
+        for img_index, img in enumerate(embedded_images):
             xref = img[0]
             if xref not in unique_images:
                 try:
                     base_image = doc.extract_image(xref)
-                    unique_images[xref] = {
-                        "page": i + 1,
-                        "image": base_image["image"],
-                        "ext": base_image["ext"]
-                    }
+                    img_data = base_image["image"]
+                    ext = base_image["ext"]
+                    filename = f"page_{i + 1}_img{img_index + 1}.{ext}"
+                    filepath = os.path.join(image_save_dir, filename)
+
+                    with open(filepath, "wb") as f:
+                        f.write(img_data)
+
+                    unique_images[xref] = filepath
                 except Exception as e:
                     st.error(f"⚠️ Error extracting image on page {i + 1}: {e}")
 
@@ -116,45 +122,25 @@ if uploaded_file is not None:
     else:
         st.info("No Table of Contents entries detected.")
 
-    # ─── Tables Section (via pdfplumber) ─────────────────────
+    # ─── Download All Images as ZIP ─────────────────────
     st.markdown("---")
-    st.subheader("📊 Tables (via pdfplumber)")
-
-    try:
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
-            tmp_file.write(uploaded_file.getvalue())
-            tmp_pdf_path = tmp_file.name
-
-        with pdfplumber.open(tmp_pdf_path) as plumber_pdf:
-            table_found = False
-            for page_num, page in enumerate(plumber_pdf.pages):
-                tables = page.extract_tables()
-                if tables:
-                    for t_index, table in enumerate(tables):
-                        df = pd.DataFrame(table)
-                        st.write(f"📄 Page {page_num + 1} – Table {t_index + 1}")
-                        st.dataframe(df)
-                        table_found = True
-
-            if not table_found:
-                st.info("ℹ️ No tables detected in the PDF using pdfplumber.")
-    except Exception as e:
-        st.error(f"❌ Table extraction failed: {e}")
-
-    # ─── All Images ─────────────────────
-    st.markdown("---")
-    st.header("📸 All Embedded Images in PDF")
+    st.header("📦 Download All Extracted Images")
 
     if unique_images:
-        for idx, (xref, item) in enumerate(unique_images.items(), start=1):
-            image = Image.open(io.BytesIO(item["image"]))
-            st.image(
-                image,
-                caption=f"📷 Image {idx} (first seen on Page {item['page']}, format: {item['ext']})",
-                use_container_width=False
+        zip_path = os.path.join(image_save_dir, "all_images.zip")
+        with zipfile.ZipFile(zip_path, "w") as zipf:
+            for path in unique_images.values():
+                zipf.write(path, arcname=os.path.basename(path))
+
+        with open(zip_path, "rb") as zip_file:
+            st.download_button(
+                label="⬇️ Download All Images as ZIP",
+                data=zip_file,
+                file_name="all_images.zip",
+                mime="application/zip"
             )
     else:
-        st.info("No embedded images found in the entire PDF.")
+        st.info("No embedded images found in the PDF.")
 else:
     st.info("📤 Upload a PDF file to begin.")
 
