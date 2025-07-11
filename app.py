@@ -13,11 +13,12 @@ st.title("📄 PDF Extractor – Metadata, Text, Links, TOC, Tables & Images")
 
 uploaded_file = st.file_uploader("📤 Upload a PDF file", type=["pdf"])
 
+MAX_HEADER_FOOTER_Y = 95  # Threshold in pixels from top/bottom to detect headers/footers
+
 if uploaded_file is not None:
     doc = fitz.open(stream=uploaded_file.read(), filetype="pdf")
     st.success(f"✅ PDF loaded successfully! Total Pages: {doc.page_count}")
 
-    # Store unique images using their xref as keys
     unique_images = {}
     toc_candidates = []
 
@@ -25,12 +26,28 @@ if uploaded_file is not None:
         page = doc.load_page(i)
         text = page.get_text()
         links = page.get_links()
+        blocks = page.get_text("blocks")
+        page_height = page.rect.height
         embedded_images = page.get_images(full=True)
 
-        # Collect lines for TOC detection
+        # TOC candidates
         toc_candidates.extend(page.get_text("text").splitlines())
 
-        # Collect unique embedded images
+        # ─── Header/Footer Detection ───
+        page_headers = []
+        page_footers = []
+
+        for b in blocks:
+            block_text = b[4].strip()
+            y0 = b[1]
+            y1 = b[3]
+            if block_text:
+                if y0 < MAX_HEADER_FOOTER_Y:
+                    page_headers.append(block_text)
+                if y1 > page_height - MAX_HEADER_FOOTER_Y:
+                    page_footers.append(block_text)
+
+        # ─── Collect unique embedded images ───
         for img in embedded_images:
             xref = img[0]
             if xref not in unique_images:
@@ -47,7 +64,6 @@ if uploaded_file is not None:
         # ─── Per Page Content ─────────────────────────────
         st.markdown(f"---\n### 📄 Page {i + 1}")
 
-        # 📑 Page Metadata
         with st.expander("📑 Page Metadata"):
             metadata = {
                 "Page Number": i + 1,
@@ -59,22 +75,35 @@ if uploaded_file is not None:
             }
             st.json(metadata)
 
-        # 📝 Extracted Text
         with st.expander("📝 Extracted Text"):
             if text.strip():
                 st.text(text)
             else:
                 st.warning("No text found on this page.")
 
-        # 🔗 Links
-        if links:
-            with st.expander("🔗 Page Links"):
+        with st.expander("🔗 Page Links"):
+            if links:
                 for link in links:
                     st.json(link)
-        else:
-            st.caption("🔗 No links found on this page.")
+            else:
+                st.caption("🔗 No links found on this page.")
 
-    # ─── Table of Contents Detection ─────────────────────
+        with st.expander("🧾 Headers & Footers"):
+            if page_headers:
+                st.markdown("**Headers:**")
+                for h in page_headers:
+                    st.markdown(f"- {h}")
+            else:
+                st.caption("No headers detected.")
+
+            if page_footers:
+                st.markdown("**Footers:**")
+                for f in page_footers:
+                    st.markdown(f"- {f}")
+            else:
+                st.caption("No footers detected.")
+
+    # ─── TOC Detection ─────────────────────
     st.markdown("---")
     st.subheader("📌 Detected Table of Contents")
     pattern = re.compile(r"\.{2,}\s*\d+$")
@@ -112,7 +141,7 @@ if uploaded_file is not None:
     except Exception as e:
         st.error(f"❌ Table extraction failed: {e}")
 
-    # ─── Final Section: All Unique Embedded Images ─────────────────────
+    # ─── All Images ─────────────────────
     st.markdown("---")
     st.header("📸 All Embedded Images in PDF")
 
@@ -126,6 +155,6 @@ if uploaded_file is not None:
             )
     else:
         st.info("No embedded images found in the entire PDF.")
-
 else:
     st.info("📤 Upload a PDF file to begin.")
+
