@@ -196,4 +196,3 @@ if uploaded_file is not None:
 
 else:
     st.info("📤 Upload a PDF file to begin.")
-
