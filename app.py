@@ -14,7 +14,7 @@ st.set_page_config(page_title="PDF Extractor by PyMuPDF", layout="wide")
 st.title("📄 PDF Extractor – Metadata, Text, Links, TOC, Headers, Images")
 
 uploaded_file = st.file_uploader("📤 Upload a PDF file", type=["pdf"])
-MAX_HEADER_FOOTER_Y = 60  # Threshold in pixels from top/bottom to detect headers/footers
+MAX_HEADER_FOOTER_Y = 50  # Threshold in pixels from top/bottom to detect headers/footers
 
 if uploaded_file is not None:
     doc = fitz.open(stream=uploaded_file.read(), filetype="pdf")
