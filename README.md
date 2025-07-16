@@ -39,6 +39,7 @@ Follow these steps to run the app on your local machine.
 
 ### 1. ✅ Clone the Repository
 
+
 git clone https://github.com/your-username/pdf-extractor-app.git
 cd pdf-extractor-app
 
@@ -46,6 +47,7 @@ cd pdf-extractor-app
 
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
+
 
 ### 3. 📥 Install Required Packages
 
