@@ -42,7 +42,7 @@ Follow the steps below to install and run the app on your machine.
 ### 1. ✅ Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/pdf-extractor-app.git
+git clone [https://github.com/your-username/pdf-extractor-app.git]
 cd pdf-extractor-app
 ```
 ### 2. 📦 Create a Virtual Environment (Recommended)
