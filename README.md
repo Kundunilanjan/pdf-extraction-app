@@ -39,5 +39,14 @@ A powerful Streamlit web app that extracts, analyzes, and reconstructs PDF conte
 
 ---
 
-## 📦 Folder Structure
+
+---
+
+## 🧪 How to Run Locally
+
+1. **Clone this repository**
+```bash
+git clone https://github.com/yourusername/pdf-extractor-app.git
+cd pdf-extractor-app
+
 
