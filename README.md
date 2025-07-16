@@ -49,4 +49,4 @@ A powerful Streamlit web app that extracts, analyzes, and reconstructs PDF conte
 git clone https://github.com/yourusername/pdf-extractor-app.git
 cd pdf-extractor-app
 
-
+Create virtual environment (optional but recommended)
