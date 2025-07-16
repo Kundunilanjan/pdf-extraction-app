@@ -1,52 +1,68 @@
-# 📄 PDF Extractor – Metadata, Text, Links, TOC, Headers, Images
+# 📄 PDF Extractor – Metadata, TOC, Headers, Footers, Text, and Images
 
-A powerful Streamlit web app that extracts, analyzes, and reconstructs PDF content using [PyMuPDF (fitz)](https://pymupdf.readthedocs.io/), OpenCV, and ReportLab. The app identifies headers, footers, body content, images, metadata, hyperlinks, and Table of Contents entries.
+A powerful PDF content extraction and reconstruction tool built with **Streamlit**, **PyMuPDF (fitz)**, and **ReportLab**. This application can analyze and restructure PDFs by detecting metadata, headers, footers, body text, links, images, and table of contents entries.
 
 ---
 
 ## 🚀 Features
 
-✅ Upload and parse any PDF file  
+✅ Upload any PDF and view page-wise content  
 ✅ Extract:
-- Text, metadata, embedded images
-- Headers, footers, and main body text (based on Y-coordinate thresholds)
-- All hyperlinks per page
-✅ Detect Table of Contents using regex-based patterns  
-✅ Download all extracted images as a ZIP  
-✅ Reconstruct the parsed content into a new PDF using ReportLab  
-✅ Fully interactive web interface via Streamlit
+- **Headers & Footers** (via coordinate thresholds)
+- **Body Text** (main content)
+- **Metadata** (page size, rotation, etc.)
+- **Hyperlinks**
+- **Embedded Images**
+✅ Detect **Table of Contents (TOC)** using regex  
+✅ Download all images as a ZIP archive  
+✅ Generate a reconstructed, readable PDF using **ReportLab**  
+✅ Clean UI built with **Streamlit**
 
 ---
 
-## 🖼 App Demo (Screenshots)
+## 🛠️ Tech Stack
 
-| Upload PDF | Extracted TOC & Metadata |
-|------------|--------------------------|
-| ![Upload](https://i.imgur.com/aUxO3Nl.png) | ![TOC](https://i.imgur.com/DzYOQvm.png) |
-
----
-
-## 🛠 Tech Stack
-
-| Tool | Purpose |
-|------|---------|
-| **Streamlit** | Frontend Web Interface |
-| **PyMuPDF (fitz)** | PDF Text, Image, and Layout Parsing |
-| **ReportLab** | PDF Reconstruction |
-| **Regex** | Table of Contents Detection |
-| **Pillow (PIL)** | Image Handling |
-| **Zipfile** | Download all extracted images |
+| Tool / Library | Purpose |
+|----------------|---------|
+| `streamlit` | UI frontend |
+| `PyMuPDF (fitz)` | PDF parsing, text block layout, and image extraction |
+| `ReportLab` | PDF reconstruction |
+| `PIL` / `Pillow` | Image handling |
+| `re` | Regex for TOC detection |
+| `zipfile` | Image packaging and download |
 
 ---
 
+## 🧑‍💻 Local Setup Guide
 
----
+Follow these steps to run the app on your local machine.
 
-## 🧪 How to Run Locally
+### 1. ✅ Clone the Repository
 
-1. **Clone this repository**
 ```bash
-git clone https://github.com/yourusername/pdf-extractor-app.git
+git clone https://github.com/your-username/pdf-extractor-app.git
 cd pdf-extractor-app
+2. 📦 Create a Virtual Environment (Recommended)
+bash
+Copy
+Edit
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+3. 📥 Install Required Packages
+bash
+Copy
+Edit
+pip install -r requirements.txt
+If requirements.txt doesn't exist, use:
 
-Create virtual environment (optional but recommended)
+bash
+Copy
+Edit
+pip install streamlit pymupdf reportlab pillow
+4. 🚀 Launch the App
+bash
+Copy
+Edit
+streamlit run app.py
+5. 🌐 Open in Browser
+Visit http://localhost:8501 to interact with the PDF Extractor.
