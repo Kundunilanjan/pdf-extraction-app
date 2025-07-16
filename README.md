@@ -39,30 +39,21 @@ Follow these steps to run the app on your local machine.
 
 ### 1. ✅ Clone the Repository
 
-```bash
 git clone https://github.com/your-username/pdf-extractor-app.git
 cd pdf-extractor-app
-2. 📦 Create a Virtual Environment (Recommended)
-bash
-Copy
-Edit
+
+### 2. 📦 Create a Virtual Environment (Recommended)
+
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
-3. 📥 Install Required Packages
-bash
-Copy
-Edit
-pip install -r requirements.txt
-If requirements.txt doesn't exist, use:
 
-bash
-Copy
-Edit
-pip install streamlit pymupdf reportlab pillow
-4. 🚀 Launch the App
-bash
-Copy
-Edit
+### 3. 📥 Install Required Packages
+
+pip install -r requirements.txt
+
+### 4. 🚀 Launch the App
+
 streamlit run app.py
-5. 🌐 Open in Browser
+
+### 5. 🌐 Open in Browser
 Visit http://localhost:8501 to interact with the PDF Extractor.
