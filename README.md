@@ -35,27 +35,23 @@ A powerful PDF content extraction and reconstruction tool built with **Streamlit
 
 ## 🧑‍💻 Local Setup Guide
 
-Follow these steps to run the app on your local machine.
+Follow the steps below to install and run the app on your machine.
+
+---
 
 ### 1. ✅ Clone the Repository
 
 ```bash
 git clone https://github.com/your-username/pdf-extractor-app.git
 cd pdf-extractor-app
-
-### 2. 📦 Create a Virtual Environment (Recommended)
-```bash
+# Create virtual environment
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
 
+# Activate it
+# On Windows:
+venv\Scripts\activate
 
-### 3. 📥 Install Required Packages
-```bash
+# On macOS/Linux:
+source venv/bin/activate
+
 pip install -r requirements.txt
-
-### 4. 🚀 Launch the App
-```bash
-streamlit run app.py
-
-### 5. 🌐 Open in Browser
-Visit http://localhost:8501 to interact with the PDF Extractor.
