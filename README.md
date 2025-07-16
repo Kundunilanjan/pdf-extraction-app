@@ -39,22 +39,22 @@ Follow these steps to run the app on your local machine.
 
 ### 1. ✅ Clone the Repository
 
-
+```bash
 git clone https://github.com/your-username/pdf-extractor-app.git
 cd pdf-extractor-app
 
 ### 2. 📦 Create a Virtual Environment (Recommended)
-
+```bash
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 
 ### 3. 📥 Install Required Packages
-
+```bash
 pip install -r requirements.txt
 
 ### 4. 🚀 Launch the App
-
+```bash
 streamlit run app.py
 
 ### 5. 🌐 Open in Browser
